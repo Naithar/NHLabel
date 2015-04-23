@@ -13,7 +13,7 @@ extern NSString *const kNLabelSmsToSelector;
 extern NSString *const kNLabelEmailToSelector;
 extern NSString *const kNLabelUrlToSelector;
 
-@interface NLabel : UILabel
+@interface NHLabel : UILabel
 
 @property (nonatomic, assign) UIEdgeInsets textInsets;
 @property (nonatomic, assign) BOOL useSingleTouch;

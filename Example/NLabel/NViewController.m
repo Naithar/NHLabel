@@ -12,7 +12,7 @@
 @interface NViewController ()
 
 
-@property (nonatomic, strong) NLabel *label;
+@property (nonatomic, strong) NHLabel *label;
 @end
 
 @implementation NViewController
@@ -23,11 +23,12 @@
 	// Do any additional setup after loading the view, typically from a nib.
 
 
-    self.label = [[NLabel alloc] initWithFrame:CGRectMake(0, 0, 100, 100)];
+    self.label = [[NHLabel alloc] initWithFrame:CGRectMake(0, 0, 100, 100)];
     self.label.text = @"text";
     self.label.backgroundColor = [UIColor greenColor];
     self.label.canPerform = YES;
     self.label.customSelectors = @[kNLabelSmsToSelector];
+    self.label.useSingleTouch = YES;
 //    label.canResignFirstResponder
 
 

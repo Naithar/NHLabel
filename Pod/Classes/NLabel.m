@@ -13,14 +13,14 @@ NSString *const kNLabelSmsToSelector = @"smsTo:";
 NSString *const kNLabelEmailToSelector = @"emailTo:";
 NSString *const kNLabelUrlToSelector = @"urlTo:";
 
-@interface NLabel ()
+@interface NHLabel ()
 
 @property (nonatomic, strong) UITapGestureRecognizer *tapRecognizer;
 @property (nonatomic, strong) UILongPressGestureRecognizer *longPressRecognizer;
 
 @end
 
-@implementation NLabel
+@implementation NHLabel
 
 
 - (instancetype)init {
