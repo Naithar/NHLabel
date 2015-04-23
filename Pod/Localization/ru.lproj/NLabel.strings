@@ -1,0 +1,12 @@
+/* 
+  NLabel.strings
+  Pods
+
+  Created by Naithar on 22.04.15.
+
+*/
+
+"NLabel.call" = "Позвонить";
+"NLabel.sms" = "Отправить сообщение";
+"NLabel.email" = "Отпрвить email";
+"NLabel.url" = "Перейти по ссылке";
