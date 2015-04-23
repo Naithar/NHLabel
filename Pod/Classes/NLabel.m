@@ -15,7 +15,8 @@ NSString *const kNLabelUrlToSelector = @"urlTo:";
 
 @interface NLabel ()
 
-@property (nonatomic, strong) UITapGestureRecognizer *longPressRecognizer;
+@property (nonatomic, strong) UITapGestureRecognizer *tapRecognizer;
+@property (nonatomic, strong) UILongPressGestureRecognizer *longPressRecognizer;
 
 @end
 
@@ -54,15 +55,32 @@ NSString *const kNLabelUrlToSelector = @"urlTo:";
     _textInsets = UIEdgeInsetsZero;
 
 
-    self.longPressRecognizer = [[UITapGestureRecognizer alloc]
+    self.tapRecognizer = [[UITapGestureRecognizer alloc]
                                 initWithTarget:self
-                                action:@selector(longPressRecognizerAction:)];
-    self.longPressRecognizer.numberOfTouchesRequired = 1;
-    self.longPressRecognizer.numberOfTapsRequired = 1;
+                                action:@selector(tapGestureRecognizerAction:)];
+    self.tapRecognizer.numberOfTouchesRequired = 1;
+    self.tapRecognizer.numberOfTapsRequired = 1;
+    [self addGestureRecognizer:self.tapRecognizer];
+
+    self.longPressRecognizer = [[UILongPressGestureRecognizer alloc]
+                          initWithTarget:self
+                          action:@selector(longPressGestureRecognizerAction:)];
+//    self.longPressRecognizer.numberOfTouchesRequired = 1;
+//    self.longPressRecognizer.numberOfTapsRequired = 1;
     [self addGestureRecognizer:self.longPressRecognizer];
+
 }
 
-- (void)longPressRecognizerAction:(UITapGestureRecognizer*)recognizer {
+- (void)tapGestureRecognizerAction:(UITapGestureRecognizer*)recognizer {
+    if (!self.useSingleTouch) {
+        [UIView animateWithDuration:0.3 animations:^{
+            [[UIMenuController sharedMenuController] setMenuVisible:NO];
+            [self resignFirstResponder];
+
+        }];
+        return;
+    }
+
     if (!self.isFirstResponder) {
         [self becomeFirstResponder];
     }
@@ -72,6 +90,18 @@ NSString *const kNLabelUrlToSelector = @"urlTo:";
             [self resignFirstResponder];
 
         }];
+    }
+}
+
+- (void)longPressGestureRecognizerAction:(UILongPressGestureRecognizer*)recognizer {
+    if (self.useSingleTouch) {
+        return;
+    }
+
+    if (recognizer.state == UIGestureRecognizerStateBegan) {
+    if (!self.isFirstResponder) {
+        [self becomeFirstResponder];
+    }
     }
 }
 

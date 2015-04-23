@@ -16,6 +16,7 @@ extern NSString *const kNLabelUrlToSelector;
 @interface NLabel : UILabel
 
 @property (nonatomic, assign) UIEdgeInsets textInsets;
+@property (nonatomic, assign) BOOL useSingleTouch;
 
 @property (nonatomic, assign) BOOL canPerform;
 @property (nonatomic, copy) NSString *customActionFormat;
