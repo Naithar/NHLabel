@@ -56,9 +56,10 @@
     // Dispose of any resources that can be recreated.
 }
 
-- (void)u:(id)sender {
-
-    NSLog(@"dsadas");
+- (void)u:(UIMenuController*)sender {
+    if ([self.label isFirstResponder]) {
+            NSLog(@"dsadas");
+    }
 }
 
 @end

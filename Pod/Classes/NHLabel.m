@@ -24,6 +24,10 @@ NSString *const kNHLabelMenuSelector = @"LabelMenuSelector";
 @property (nonatomic, strong) UILongPressGestureRecognizer *longPressRecognizer;
 
 @property (nonatomic, strong) NSMutableDictionary *customSelectors;
+
+@property (nonatomic, copy) NSDictionary *defaultLinkParameters;
+@property (nonatomic, copy) NSDictionary *defaultHashtagParameters;
+@property (nonatomic, copy) NSDictionary *defaultMentionParameters;
 @end
 
 @implementation NHLabel
@@ -60,6 +64,10 @@ NSString *const kNHLabelMenuSelector = @"LabelMenuSelector";
     _additionalSelectors = @[];
     _customSelectors = [@{} mutableCopy];
     _textInsets = UIEdgeInsetsZero;
+
+    _defaultLinkParameters = @{};
+    _defaultHashtagParameters = @{};
+    _defaultMentionParameters = @{};
 
 
     self.tapRecognizer = [[UITapGestureRecognizer alloc]
@@ -242,8 +250,6 @@ NSString *const kNHLabelMenuSelector = @"LabelMenuSelector";
                                         initWithTitle:menuItemTitle action:selector]];
         }];
 
-
-
         [[UIMenuController sharedMenuController] setMenuItems:customMenuItems];
         [[UIMenuController sharedMenuController] setTargetRect:self.bounds inView:self];
         [[UIMenuController sharedMenuController] setMenuVisible:YES animated:YES];
@@ -291,4 +297,16 @@ NSString *const kNHLabelMenuSelector = @"LabelMenuSelector";
     return [super textRectForBounds:UIEdgeInsetsInsetRect(bounds, self.textInsets)
              limitedToNumberOfLines:numberOfLines];
 }
+
+- (void)findLinksHashtagsAndMentions {
+    [self findLinks:self.defaultLinkParameters
+           hashtags:self.defaultHashtagParameters
+           mentions:self.defaultMentionParameters];
+}
+
+- (void)findLinks:(NSDictionary*)linksParameters
+         hashtags:(NSDictionary*)hashtagsParameters
+         mentions:(NSDictionary*)mentionsParameters {
+}
+
 @end
