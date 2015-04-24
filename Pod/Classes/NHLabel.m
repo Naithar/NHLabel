@@ -6,18 +6,24 @@
 //
 //
 
-#import "NLabel.h"
+#import "NHLabel.h"
 
-NSString *const kNLabelCallToSelector = @"callTo:";
-NSString *const kNLabelSmsToSelector = @"smsTo:";
-NSString *const kNLabelEmailToSelector = @"emailTo:";
-NSString *const kNLabelUrlToSelector = @"urlTo:";
+NSString *const kNHLabelCallToSelector = @"callTo:";
+NSString *const kNHLabelSmsToSelector = @"smsTo:";
+NSString *const kNHLabelEmailToSelector = @"emailTo:";
+NSString *const kNHLabelUrlToSelector = @"urlTo:";
+
+NSString *const kNHLabelMenuName = @"LabelMenuName";
+NSString *const kNHLabelMenuTitle = @"LabelMenuTitle";
+NSString *const kNHLabelMenuLocalizationTable = @"LabelMenuLocalizationTable";
+NSString *const kNHLabelMenuSelector = @"LabelMenuSelector";
 
 @interface NHLabel ()
 
 @property (nonatomic, strong) UITapGestureRecognizer *tapRecognizer;
 @property (nonatomic, strong) UILongPressGestureRecognizer *longPressRecognizer;
 
+@property (nonatomic, strong) NSMutableDictionary *customSelectors;
 @end
 
 @implementation NHLabel
@@ -51,7 +57,8 @@ NSString *const kNLabelUrlToSelector = @"urlTo:";
     self.userInteractionEnabled = YES;
     
     _canPerform = YES;
-    _customSelectors = @[];
+    _additionalSelectors = @[];
+    _customSelectors = [@{} mutableCopy];
     _textInsets = UIEdgeInsetsZero;
 
 
@@ -65,10 +72,32 @@ NSString *const kNLabelUrlToSelector = @"urlTo:";
     self.longPressRecognizer = [[UILongPressGestureRecognizer alloc]
                           initWithTarget:self
                           action:@selector(longPressGestureRecognizerAction:)];
-//    self.longPressRecognizer.numberOfTouchesRequired = 1;
-//    self.longPressRecognizer.numberOfTapsRequired = 1;
     [self addGestureRecognizer:self.longPressRecognizer];
 
+}
+
+- (void)addCustomAction:(NSString*)name
+              withTitle:(NSString*)title
+            andSelector:(SEL)selector {
+    [self addCustomAction:name
+                withTitle:title
+        localizationTable:nil
+              andSelector:selector];
+}
+
+- (void)addCustomAction:(NSString*)name
+              withTitle:(NSString*)title
+      localizationTable:(NSString*)table
+            andSelector:(SEL)selector {
+    self.customSelectors[name] = @{
+                                   kNHLabelMenuName : name,
+                                   kNHLabelMenuTitle : title,
+                                   kNHLabelMenuLocalizationTable : table ?: [NSNull null],
+                                   kNHLabelMenuSelector : NSStringFromSelector(selector)
+                                   };
+}
+- (void)removeCustomAction:(NSString*)name {
+    [self.customSelectors removeObjectForKey:name];
 }
 
 - (void)tapGestureRecognizerAction:(UITapGestureRecognizer*)recognizer {
@@ -107,13 +136,13 @@ NSString *const kNLabelUrlToSelector = @"urlTo:";
 
 
 - (NSString*)createTextForAction {
-    if (self.customActionFormatBlock) {
-        return self.customActionFormatBlock(self.text);
+    if (self.actionStringFormatBlock) {
+        return self.actionStringFormatBlock(self.text);
     }
 
-    if (self.customActionFormat != nil) {
+    if (self.actionStringFormat != nil) {
         NSString *tempText = [NSString
-                              stringWithFormat:self.customActionFormat,
+                              stringWithFormat:self.actionStringFormat,
                               [self.text
                                stringByTrimmingCharactersInSet:[NSCharacterSet
                                                                 characterSetWithCharactersInString:@"@/"]]];
@@ -182,7 +211,7 @@ NSString *const kNLabelUrlToSelector = @"urlTo:";
     if ([super becomeFirstResponder]) {
         self.alpha = 0.6;
 
-        NSArray *customMenuItems = @[
+        NSMutableArray *customMenuItems = [@[
                                      [[UIMenuItem alloc]
                                       initWithTitle:NSLocalizedStringFromTable(@"NLabel.call", @"NLabel", nil)
                                       action:@selector(callTo:)],
@@ -195,7 +224,25 @@ NSString *const kNLabelUrlToSelector = @"urlTo:";
                                      [[UIMenuItem alloc]
                                       initWithTitle:NSLocalizedStringFromTable(@"NLabel.url", @"NLabel", nil)
                                       action:@selector(urlTo:)],
-                                     ];
+                                     ] mutableCopy];
+
+        [self.customSelectors enumerateKeysAndObjectsUsingBlock:^(NSString* key,
+                                                                  NSDictionary *obj,
+                                                                  BOOL *stop) {
+            NSString *title = obj[kNHLabelMenuTitle];
+            NSString *localizationTable = obj[kNHLabelMenuLocalizationTable];
+            SEL selector = NSSelectorFromString(obj[kNHLabelMenuSelector]);
+
+            NSString *menuItemTitle = ([localizationTable isEqual:[NSNull null]]
+                                       || localizationTable == nil
+                                       ? NSLocalizedString(title, nil)
+                                       : NSLocalizedStringFromTable(title, localizationTable, nil));
+
+            [customMenuItems addObject:[[UIMenuItem alloc]
+                                        initWithTitle:menuItemTitle action:selector]];
+        }];
+
+
 
         [[UIMenuController sharedMenuController] setMenuItems:customMenuItems];
         [[UIMenuController sharedMenuController] setTargetRect:self.bounds inView:self];
@@ -231,7 +278,7 @@ NSString *const kNLabelUrlToSelector = @"urlTo:";
 - (BOOL)canPerformAction:(SEL)action withSender:(id)sender {
     return (self.canPerform
             && (action == @selector(copy:)
-                || ([self.customSelectors
+                || ([self.additionalSelectors
                      containsObject:NSStringFromSelector(action)])));
 }
 

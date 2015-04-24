@@ -7,7 +7,7 @@
 //
 
 #import "NViewController.h"
-#import <NLabel.h>
+#import <NLabel/NHLabel.h>
 
 @interface NViewController ()
 
@@ -22,13 +22,13 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
 
-
     self.label = [[NHLabel alloc] initWithFrame:CGRectMake(0, 0, 100, 100)];
     self.label.text = @"text";
     self.label.backgroundColor = [UIColor greenColor];
     self.label.canPerform = YES;
-    self.label.customSelectors = @[kNLabelSmsToSelector];
+    self.label.additionalSelectors = @[kNHLabelSmsToSelector];
     self.label.useSingleTouch = YES;
+    [self.label addCustomAction:@"name" withTitle:@"title" andSelector:@selector(u:)];
 //    label.canResignFirstResponder
 
 
@@ -54,6 +54,11 @@
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (void)u:(id)sender {
+
+    NSLog(@"dsadas");
 }
 
 @end
