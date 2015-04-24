@@ -258,6 +258,11 @@ NSString *const kNHLabelMenuSelector = @"LabelMenuSelector";
                                                  selector:@selector(menuDidHide:)
                                                      name:UIMenuControllerWillHideMenuNotification
                                                    object:nil];
+
+        __weak __typeof(self) weakSelf = self;
+        if ([weakSelf.delegate respondsToSelector:@selector(labelDidBecomeFirstResponder:)]) {
+            [weakSelf.delegate labelDidBecomeFirstResponder:weakSelf];
+        }
     }
 
     return [super becomeFirstResponder];
@@ -271,6 +276,13 @@ NSString *const kNHLabelMenuSelector = @"LabelMenuSelector";
         [[NSNotificationCenter defaultCenter] removeObserver:self
                                                         name:UIMenuControllerWillHideMenuNotification
                                                       object:nil];
+
+
+        __weak __typeof(self) weakSelf = self;
+        if ([weakSelf.delegate respondsToSelector:@selector(labelDidResignFirstResponder:)]) {
+            [weakSelf.delegate labelDidResignFirstResponder:weakSelf];
+        }
+
         return [super resignFirstResponder];
     }
 
@@ -296,6 +308,10 @@ NSString *const kNHLabelMenuSelector = @"LabelMenuSelector";
      limitedToNumberOfLines:(NSInteger)numberOfLines {
     return [super textRectForBounds:UIEdgeInsetsInsetRect(bounds, self.textInsets)
              limitedToNumberOfLines:numberOfLines];
+}
+
+- (void)formatTextAsPhone {
+
 }
 
 - (void)findLinksHashtagsAndMentions {

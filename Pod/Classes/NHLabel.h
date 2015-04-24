@@ -13,7 +13,19 @@ extern NSString *const kNHLabelSmsToSelector;
 extern NSString *const kNHLabelEmailToSelector;
 extern NSString *const kNHLabelUrlToSelector;
 
+@class NHLabel;
+
+@protocol NHLabelDelegate <NSObject>
+
+@optional
+- (void)labelDidBecomeFirstResponder:(NHLabel*)label;
+- (void)labelDidResignFirstResponder:(NHLabel*)label;
+
+@end
+
 @interface NHLabel : UILabel
+
+@property (nonatomic, weak) id<NHLabelDelegate> delegate;
 
 @property (nonatomic, assign) UIEdgeInsets textInsets;
 @property (nonatomic, assign) BOOL useSingleTouch;
@@ -39,6 +51,7 @@ extern NSString *const kNHLabelUrlToSelector;
 
 - (void)removeCustomAction:(NSString*)name;
 
+- (void)formatTextAsPhone;
 - (void)findLinksHashtagsAndMentions;
 - (void)findLinks:(NSDictionary*)linksParameters
          hashtags:(NSDictionary*)hashtagsParameters

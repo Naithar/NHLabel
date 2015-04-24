@@ -9,7 +9,7 @@
 #import "NViewController.h"
 #import <NLabel/NHLabel.h>
 
-@interface NViewController ()
+@interface NViewController ()<NHLabelDelegate>
 
 
 @property (nonatomic, strong) NHLabel *label;
@@ -29,6 +29,7 @@
     self.label.additionalSelectors = @[kNHLabelSmsToSelector];
     self.label.useSingleTouch = YES;
     [self.label addCustomAction:@"name" withTitle:@"title" andSelector:@selector(u:)];
+    self.label.delegate = self;
 //    label.canResignFirstResponder
 
 
@@ -60,6 +61,14 @@
     if ([self.label isFirstResponder]) {
             NSLog(@"dsadas");
     }
+}
+
+- (void)labelDidBecomeFirstResponder:(NHLabel *)label {
+    NSLog(@"responder");
+}
+
+- (void)labelDidResignFirstResponder:(NHLabel *)label {
+    NSLog(@"resigned");
 }
 
 @end
