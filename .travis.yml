@@ -1,10 +1,13 @@
 language: objective-c
 podfile: Example/Podfile
 before_install:
-- gem install cocoapods
+- gem install cocoapods slather activesupport
 - pod install --project-directory=Example
 install:
 - gem install xcpretty --no-rdoc --no-ri --no-document --quiet
 script:
+- slather setup Example/NLabel.xcodeproj
 - set -o pipefail && xctool -workspace Example/NLabel.xcworkspace -scheme NLabel-Example -sdk iphonesimulator ONLY_ACTIVE_ARCH=NO | xcpretty -c
 - pod lib lint --quick
+after_success: 
+- slather

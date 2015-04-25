@@ -22,8 +22,9 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
 
-    self.label = [[NHLabel alloc] initWithFrame:CGRectMake(0, 0, 100, 100)];
-    self.label.text = @"text";
+    self.label = [[NHLabel alloc] initWithFrame:CGRectMake(0, 0, 300, 100)];
+    self.label.text = @"text @dsa #dsa http://google.com";
+    [self.label findLinksHashtagsAndMentions];
     self.label.backgroundColor = [UIColor greenColor];
     self.label.canPerform = YES;
     self.label.additionalSelectors = @[kNHLabelSmsToSelector];

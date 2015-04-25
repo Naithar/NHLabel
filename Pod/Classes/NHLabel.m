@@ -18,6 +18,9 @@ NSString *const kNHLabelMenuTitle = @"LabelMenuTitle";
 NSString *const kNHLabelMenuLocalizationTable = @"LabelMenuLocalizationTable";
 NSString *const kNHLabelMenuSelector = @"LabelMenuSelector";
 
+NSString *const kNHLabelHashtagPattern = @"(#\\w+)";
+NSString *const kNHLabelMentionPattern = @"(\\A|\\W)(@\\w+)";
+
 @interface NHLabel ()
 
 @property (nonatomic, strong) UITapGestureRecognizer *tapRecognizer;
@@ -25,9 +28,9 @@ NSString *const kNHLabelMenuSelector = @"LabelMenuSelector";
 
 @property (nonatomic, strong) NSMutableDictionary *customSelectors;
 
-@property (nonatomic, copy) NSDictionary *defaultLinkParameters;
-@property (nonatomic, copy) NSDictionary *defaultHashtagParameters;
-@property (nonatomic, copy) NSDictionary *defaultMentionParameters;
+@property (nonatomic, copy) NSDictionary *defaultLinkAttributes;
+@property (nonatomic, copy) NSDictionary *defaultHashtagAttributes;
+@property (nonatomic, copy) NSDictionary *defaultMentionAttributes;
 @end
 
 @implementation NHLabel
@@ -65,9 +68,16 @@ NSString *const kNHLabelMenuSelector = @"LabelMenuSelector";
     _customSelectors = [@{} mutableCopy];
     _textInsets = UIEdgeInsetsZero;
 
-    _defaultLinkParameters = @{};
-    _defaultHashtagParameters = @{};
-    _defaultMentionParameters = @{};
+    _defaultLinkAttributes = @{
+                               NSForegroundColorAttributeName : [UIColor blueColor],
+                               NSUnderlineStyleAttributeName : @(NSUnderlineStyleSingle),
+                               };
+    _defaultHashtagAttributes = @{
+                                  NSForegroundColorAttributeName : [UIColor redColor]
+                                  };
+    _defaultMentionAttributes = @{
+                                  NSForegroundColorAttributeName : [UIColor greenColor]
+                                  };
 
 
     self.tapRecognizer = [[UITapGestureRecognizer alloc]
@@ -315,14 +325,118 @@ NSString *const kNHLabelMenuSelector = @"LabelMenuSelector";
 }
 
 - (void)findLinksHashtagsAndMentions {
-    [self findLinks:self.defaultLinkParameters
-           hashtags:self.defaultHashtagParameters
-           mentions:self.defaultMentionParameters];
+    [self findLinks:self.defaultLinkAttributes
+           hashtags:self.defaultHashtagAttributes
+           mentions:self.defaultMentionAttributes];
 }
 
-- (void)findLinks:(NSDictionary*)linksParameters
-         hashtags:(NSDictionary*)hashtagsParameters
-         mentions:(NSDictionary*)mentionsParameters {
+- (void)findLinks:(NSDictionary*)linkAttributes
+         hashtags:(NSDictionary*)hashtagAttributes
+         mentions:(NSDictionary*)mentionAttributes {
+
+    NSMutableAttributedString *tempAttributedString;
+
+    if (!self.attributedText) {
+        NSMutableParagraphStyle *paragraphStyle = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
+        paragraphStyle.lineBreakMode = self.lineBreakMode;
+        paragraphStyle.alignment = self.textAlignment;
+
+        tempAttributedString = [[NSMutableAttributedString alloc]
+                                initWithString:self.text ?: @""
+                                attributes:@{
+                                             NSFontAttributeName : self.font,
+                                             NSForegroundColorAttributeName : self.textColor,
+                                             NSParagraphStyleAttributeName : paragraphStyle
+                                             }];
+    }
+    else {
+        tempAttributedString = [self.attributedText mutableCopy];
+    }
+
+    [self findLinksInAttributedString:tempAttributedString
+                       withAttributes:linkAttributes ?: self.defaultLinkAttributes];
+
+    [self findHashtagsInAttributedString:tempAttributedString
+                          withAttributes:hashtagAttributes ?: self.defaultHashtagAttributes];
+
+    [self findMentionsInAttributedString:tempAttributedString
+                          withAttributes:mentionAttributes ?: self.defaultMentionAttributes];
+
+    self.attributedText = tempAttributedString;
+
+}
+
+- (void)findLinksInAttributedString:(NSMutableAttributedString*)string
+                     withAttributes:(NSDictionary*)attributes {
+    if (!string) {
+        return;
+    }
+
+    NSRange textRange = NSMakeRange(0, [string length]);
+
+    NSDataDetector *dataDetector = [NSDataDetector
+                                    dataDetectorWithTypes:NSTextCheckingTypeLink
+                                    error:nil];
+
+    [dataDetector enumerateMatchesInString:[string string]
+                                   options:0
+                                     range:textRange
+                                usingBlock:^(NSTextCheckingResult *result,
+                                             NSMatchingFlags flags,
+                                             BOOL *stop) {
+                                    NSRange linkRange = result.range;
+
+                                    [string addAttributes:attributes range:linkRange];
+                                }];
+}
+
+- (void)findHashtagsInAttributedString:(NSMutableAttributedString*)string
+                     withAttributes:(NSDictionary*)attributes {
+    if (!string) {
+        return;
+    }
+
+    NSRange textRange = NSMakeRange(0, [string length]);
+
+    NSRegularExpression *hashtagRegExp = [NSRegularExpression
+                                          regularExpressionWithPattern:kNHLabelHashtagPattern
+                                          options:0
+                                          error:nil];
+
+
+
+    [hashtagRegExp enumerateMatchesInString:[string string]
+                                    options:0
+                                      range:textRange
+                                 usingBlock:^(NSTextCheckingResult *result,
+                                              NSMatchingFlags flags,
+                                              BOOL *stop) {
+                                     NSRange hashtagRange = [result rangeAtIndex:0];
+
+                                     [string addAttributes:attributes range:hashtagRange];
+                                 }];
+}
+
+- (void)findMentionsInAttributedString:(NSMutableAttributedString*)string
+                     withAttributes:(NSDictionary*)attributes {
+    if (!string) {
+        return;
+    }
+
+    NSRange textRange = NSMakeRange(0, [string length]);
+
+    NSRegularExpression *mentionRegExp = [NSRegularExpression regularExpressionWithPattern:kNHLabelMentionPattern options:0 error:nil];
+
+    [mentionRegExp enumerateMatchesInString:[string string]
+                                    options:0
+                                      range:textRange
+                                 usingBlock:^(NSTextCheckingResult *result,
+                                              NSMatchingFlags flags,
+                                              BOOL *stop) {
+                                     NSRange mentionRange = [result rangeAtIndex:0];
+
+                                     [string addAttributes:attributes range:mentionRange];
+                                 }];
 }
 
 @end

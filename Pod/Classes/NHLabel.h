@@ -36,9 +36,9 @@ extern NSString *const kNHLabelUrlToSelector;
 
 @property (nonatomic, copy) NSArray *additionalSelectors;
 
-@property (nonatomic, readonly, copy) NSDictionary *defaultLinkParameters;
-@property (nonatomic, readonly, copy) NSDictionary *defaultHashtagParameters;
-@property (nonatomic, readonly, copy) NSDictionary *defaultMentionParameters;
+@property (nonatomic, readonly, copy) NSDictionary *defaultLinkAttributes;
+@property (nonatomic, readonly, copy) NSDictionary *defaultHashtagAttributes;
+@property (nonatomic, readonly, copy) NSDictionary *defaultMentionAttributes;
 
 - (void)addCustomAction:(NSString*)name
               withTitle:(NSString*)title
@@ -53,8 +53,8 @@ extern NSString *const kNHLabelUrlToSelector;
 
 - (void)formatTextAsPhone;
 - (void)findLinksHashtagsAndMentions;
-- (void)findLinks:(NSDictionary*)linksParameters
-         hashtags:(NSDictionary*)hashtagsParameters
-         mentions:(NSDictionary*)mentionsParameters;
+- (void)findLinks:(NSDictionary*)linkAttributes
+         hashtags:(NSDictionary*)hashtagAttributes
+         mentions:(NSDictionary*)mentionAttributes;
 
 @end
