@@ -8,6 +8,9 @@
 
 #import "NHLabel.h"
 
+#define ifNSNull(x, y) \
+([x isKindOfClass:[NSNull class]]) ? y : (x ?: y)
+
 NSString *const kNHLabelCallToSelector = @"callTo:";
 NSString *const kNHLabelSmsToSelector = @"smsTo:";
 NSString *const kNHLabelEmailToSelector = @"emailTo:";

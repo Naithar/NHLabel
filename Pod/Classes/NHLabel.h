@@ -8,8 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-#define ifNSNull(x, y) \
-([x isKindOfClass:[NSNull class]]) ? y : (x ?: y)
+
 
 extern NSString *const kNHLabelCallToSelector;
 extern NSString *const kNHLabelSmsToSelector;
