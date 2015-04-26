@@ -22,10 +22,21 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
 
+    [NHLabel appearance].linkAttributes = @{
+                                                     NSForegroundColorAttributeName : [UIColor redColor],
+                                                     };
+
+    [NHLabel appearance].hashtagAttributes = @{
+                                            NSForegroundColorAttributeName : [UIColor blueColor],
+                                            };
+
+    [NHLabel appearance].mentionAttributes = @{
+                                            NSForegroundColorAttributeName : [UIColor greenColor],
+                                            };
     self.label = [[NHLabel alloc] initWithFrame:CGRectMake(0, 0, 300, 100)];
     self.label.text = @"text @dsa #dsa http://google.com";
     [self.label findLinksHashtagsAndMentions];
-    self.label.backgroundColor = [UIColor greenColor];
+    self.label.backgroundColor = [UIColor lightGrayColor];
     self.label.canPerform = YES;
     self.label.additionalSelectors = @[kNHLabelSmsToSelector];
     self.label.useSingleTouch = YES;

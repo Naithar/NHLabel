@@ -28,12 +28,13 @@ NSString *const kNHLabelMentionPattern = @"(\\A|\\W)(@\\w+)";
 
 @property (nonatomic, strong) NSMutableDictionary *customSelectors;
 
-@property (nonatomic, copy) NSDictionary *defaultLinkAttributes;
-@property (nonatomic, copy) NSDictionary *defaultHashtagAttributes;
-@property (nonatomic, copy) NSDictionary *defaultMentionAttributes;
+//@property (nonatomic, copy) NSDictionary *defaultLinkAttributes;
+//@property (nonatomic, copy) NSDictionary *defaultHashtagAttributes;
+//@property (nonatomic, copy) NSDictionary *defaultMentionAttributes;
 @end
 
 @implementation NHLabel
+
 
 - (instancetype)init {
     self = [super init];
@@ -67,16 +68,9 @@ NSString *const kNHLabelMentionPattern = @"(\\A|\\W)(@\\w+)";
     _customSelectors = [@{} mutableCopy];
     _textInsets = UIEdgeInsetsZero;
 
-    _defaultLinkAttributes = @{
-                               NSForegroundColorAttributeName : [UIColor blueColor],
-                               NSUnderlineStyleAttributeName : @(NSUnderlineStyleSingle),
-                               };
-    _defaultHashtagAttributes = @{
-                                  NSForegroundColorAttributeName : [UIColor redColor]
-                                  };
-    _defaultMentionAttributes = @{
-                                  NSForegroundColorAttributeName : [UIColor greenColor]
-                                  };
+    _linkAttributes = [[NHLabel appearance] linkAttributes];
+    _hashtagAttributes = [[NHLabel appearance] hashtagAttributes];
+    _mentionAttributes = [[NHLabel appearance] mentionAttributes];
 
 
     self.tapRecognizer = [[UITapGestureRecognizer alloc]
@@ -320,9 +314,9 @@ NSString *const kNHLabelMentionPattern = @"(\\A|\\W)(@\\w+)";
 }
 
 - (void)findLinksHashtagsAndMentions {
-    [self findLinks:self.defaultLinkAttributes
-           hashtags:self.defaultHashtagAttributes
-           mentions:self.defaultMentionAttributes];
+    [self findLinks:self.linkAttributes
+           hashtags:self.hashtagAttributes
+           mentions:self.mentionAttributes];
 }
 
 - (void)findLinks:(NSDictionary*)linkAttributes
@@ -356,12 +350,12 @@ NSString *const kNHLabelMentionPattern = @"(\\A|\\W)(@\\w+)";
 
     if (hashtagAttributes) {
         [self findHashtagsInAttributedString:tempAttributedString
-                              withAttributes:hashtagAttributes ?: self.defaultHashtagAttributes];
+                              withAttributes:hashtagAttributes ?: self.hashtagAttributes];
     }
 
     if (mentionAttributes) {
         [self findMentionsInAttributedString:tempAttributedString
-                              withAttributes:mentionAttributes ?: self.defaultMentionAttributes];
+                              withAttributes:mentionAttributes ?: self.mentionAttributes];
     }
 
     self.attributedText = tempAttributedString;
@@ -388,7 +382,7 @@ NSString *const kNHLabelMentionPattern = @"(\\A|\\W)(@\\w+)";
                                              BOOL *stop) {
                                     NSRange linkRange = result.range;
 
-                                    [string addAttributes:attributes ?: self.defaultLinkAttributes
+                                    [string addAttributes:attributes ?: self.linkAttributes
                                                     range:linkRange];
                                 }];
 }
@@ -416,7 +410,7 @@ NSString *const kNHLabelMentionPattern = @"(\\A|\\W)(@\\w+)";
                                               BOOL *stop) {
                                      NSRange hashtagRange = [result rangeAtIndex:0];
 
-                                     [string addAttributes:attributes ?: self.defaultHashtagAttributes
+                                     [string addAttributes:attributes ?: self.hashtagAttributes
                                                      range:hashtagRange];
                                  }];
 }
@@ -442,7 +436,7 @@ NSString *const kNHLabelMentionPattern = @"(\\A|\\W)(@\\w+)";
                                               BOOL *stop) {
                                      NSRange mentionRange = [result rangeAtIndex:0];
 
-                                     [string addAttributes:attributes ?: self.defaultMentionAttributes
+                                     [string addAttributes:attributes ?: self.mentionAttributes
                                                      range:mentionRange];
                                  }];
 }

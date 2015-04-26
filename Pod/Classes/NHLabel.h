@@ -36,9 +36,9 @@ extern NSString *const kNHLabelUrlToSelector;
 
 @property (nonatomic, copy) NSArray *additionalSelectors;
 
-@property (nonatomic, readonly, copy) NSDictionary *defaultLinkAttributes;
-@property (nonatomic, readonly, copy) NSDictionary *defaultHashtagAttributes;
-@property (nonatomic, readonly, copy) NSDictionary *defaultMentionAttributes;
+@property (nonatomic, copy) NSDictionary *linkAttributes;
+@property (nonatomic, copy) NSDictionary *hashtagAttributes;
+@property (nonatomic, copy) NSDictionary *mentionAttributes;
 
 - (void)addCustomAction:(NSString*)name
               withTitle:(NSString*)title
