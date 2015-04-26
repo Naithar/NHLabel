@@ -22,17 +22,26 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
 
-    [NHLabel appearance].linkAttributes = @{
-                                                     NSForegroundColorAttributeName : [UIColor redColor],
-                                                     };
+//    [[NHLabel appearance] setLinkAttributes:
+//
+//    [NHLabel appearance].hashtagAttributes = @{
+//
+//    [NHLabel appearance].mentionAttributes = @{
+//
+//    [NHLabel appearanceWhenContainedIn:[NHLabel class], nil].responderAlpha = 1;
 
-    [NHLabel appearance].hashtagAttributes = @{
-                                            NSForegroundColorAttributeName : [UIColor blueColor],
-                                            };
+     [NHLabel defaultSettings][kNHLabelLinkAttributesSetting] = @{
+                                                                  NSForegroundColorAttributeName : [UIColor blueColor],
+                                                                  };
 
-    [NHLabel appearance].mentionAttributes = @{
-                                            NSForegroundColorAttributeName : [UIColor greenColor],
-                                            };
+     [NHLabel defaultSettings][kNHLabelHashtagAttributesSetting] = @{
+                                                                     NSForegroundColorAttributeName : [UIColor redColor],
+                                                                     };
+    [NHLabel defaultSettings][kNHLabelMentionAttributesSetting] = @{
+                                                                    NSForegroundColorAttributeName : [UIColor greenColor],
+                                                                    };
+    [NHLabel defaultSettings][kNHLabelResponderAlphaSetting] = @1;
+
     self.label = [[NHLabel alloc] initWithFrame:CGRectMake(0, 0, 300, 100)];
     self.label.text = @"text @dsa #dsa http://google.com";
     [self.label findLinksHashtagsAndMentions];

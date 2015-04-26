@@ -21,6 +21,12 @@ NSString *const kNHLabelMenuSelector = @"LabelMenuSelector";
 NSString *const kNHLabelHashtagPattern = @"(#\\w+)";
 NSString *const kNHLabelMentionPattern = @"(\\A|\\W)(@\\w+)";
 
+
+NSString *const kNHLabelResponderAlphaSetting = @"NHLabelResponderAlpha";
+NSString *const kNHLabelLinkAttributesSetting = @"NHLabelLinkAttributes";
+NSString *const kNHLabelHashtagAttributesSetting = @"NHLabelHashtagAttributes";
+NSString *const kNHLabelMentionAttributesSetting = @"NHLabelMentionAttributes";
+
 @interface NHLabel ()
 
 @property (nonatomic, strong) UITapGestureRecognizer *tapRecognizer;
@@ -28,13 +34,9 @@ NSString *const kNHLabelMentionPattern = @"(\\A|\\W)(@\\w+)";
 
 @property (nonatomic, strong) NSMutableDictionary *customSelectors;
 
-//@property (nonatomic, copy) NSDictionary *defaultLinkAttributes;
-//@property (nonatomic, copy) NSDictionary *defaultHashtagAttributes;
-//@property (nonatomic, copy) NSDictionary *defaultMentionAttributes;
 @end
 
 @implementation NHLabel
-
 
 - (instancetype)init {
     self = [super init];
@@ -60,17 +62,34 @@ NSString *const kNHLabelMentionPattern = @"(\\A|\\W)(@\\w+)";
     return self;
 }
 
++ (NSMutableDictionary*)defaultSettings
+{
+    static dispatch_once_t token;
+    __strong static NSMutableDictionary* settings = nil;
+    dispatch_once(&token, ^{
+        settings = [@{
+                      kNHLabelResponderAlphaSetting : @0.75,
+                      kNHLabelLinkAttributesSetting : @{},
+                      kNHLabelHashtagAttributesSetting : @{},
+                      kNHLabelMentionAttributesSetting : @{}
+                     } mutableCopy];
+    });
+
+    return settings;
+}
+
 - (void)commonInit {
     self.userInteractionEnabled = YES;
-    
+
     _canPerform = YES;
     _additionalSelectors = @[];
     _customSelectors = [@{} mutableCopy];
     _textInsets = UIEdgeInsetsZero;
-
-    _linkAttributes = [[NHLabel appearance] linkAttributes];
-    _hashtagAttributes = [[NHLabel appearance] hashtagAttributes];
-    _mentionAttributes = [[NHLabel appearance] mentionAttributes];
+    
+    _linkAttributes = ifNSNull([NHLabel defaultSettings][kNHLabelLinkAttributesSetting], nil);
+    _hashtagAttributes = ifNSNull([NHLabel defaultSettings][kNHLabelHashtagAttributesSetting], nil);
+    _mentionAttributes = ifNSNull([NHLabel defaultSettings][kNHLabelMentionAttributesSetting], nil);
+    _responderAlpha = [ifNSNull([NHLabel defaultSettings][kNHLabelResponderAlphaSetting], @0) floatValue];
 
 
     self.tapRecognizer = [[UITapGestureRecognizer alloc]
@@ -220,7 +239,10 @@ NSString *const kNHLabelMentionPattern = @"(\\A|\\W)(@\\w+)";
     }
 
     if ([super becomeFirstResponder]) {
-        self.alpha = 0.6;
+        [UIView animateWithDuration:0.3 animations:^{
+            self.alpha = self.responderAlpha;
+        }];
+
 
         NSMutableArray *customMenuItems = [@[
                                      [[UIMenuItem alloc]

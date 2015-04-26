@@ -8,10 +8,18 @@
 
 #import <UIKit/UIKit.h>
 
+#define ifNSNull(x, y) \
+([x isKindOfClass:[NSNull class]]) ? y : (x ?: y)
+
 extern NSString *const kNHLabelCallToSelector;
 extern NSString *const kNHLabelSmsToSelector;
 extern NSString *const kNHLabelEmailToSelector;
 extern NSString *const kNHLabelUrlToSelector;
+
+extern NSString *const kNHLabelResponderAlphaSetting;
+extern NSString *const kNHLabelLinkAttributesSetting;
+extern NSString *const kNHLabelHashtagAttributesSetting;
+extern NSString *const kNHLabelMentionAttributesSetting;
 
 @class NHLabel;
 
@@ -39,6 +47,10 @@ extern NSString *const kNHLabelUrlToSelector;
 @property (nonatomic, copy) NSDictionary *linkAttributes;
 @property (nonatomic, copy) NSDictionary *hashtagAttributes;
 @property (nonatomic, copy) NSDictionary *mentionAttributes;
+
+@property (nonatomic, assign) CGFloat responderAlpha;
+
++ (NSMutableDictionary*)defaultSettings;
 
 - (void)addCustomAction:(NSString*)name
               withTitle:(NSString*)title
