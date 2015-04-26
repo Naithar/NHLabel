@@ -35,7 +35,6 @@ NSString *const kNHLabelMentionPattern = @"(\\A|\\W)(@\\w+)";
 
 @implementation NHLabel
 
-
 - (instancetype)init {
     self = [super init];
     if (self) {
@@ -320,10 +319,6 @@ NSString *const kNHLabelMentionPattern = @"(\\A|\\W)(@\\w+)";
              limitedToNumberOfLines:numberOfLines];
 }
 
-- (void)formatTextAsPhone {
-
-}
-
 - (void)findLinksHashtagsAndMentions {
     [self findLinks:self.defaultLinkAttributes
            hashtags:self.defaultHashtagAttributes
@@ -338,6 +333,7 @@ NSString *const kNHLabelMentionPattern = @"(\\A|\\W)(@\\w+)";
 
     if (!self.attributedText) {
         NSMutableParagraphStyle *paragraphStyle = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
+
         paragraphStyle.lineBreakMode = self.lineBreakMode;
         paragraphStyle.alignment = self.textAlignment;
 
@@ -353,14 +349,20 @@ NSString *const kNHLabelMentionPattern = @"(\\A|\\W)(@\\w+)";
         tempAttributedString = [self.attributedText mutableCopy];
     }
 
-    [self findLinksInAttributedString:tempAttributedString
-                       withAttributes:linkAttributes ?: self.defaultLinkAttributes];
+    if (linkAttributes) {
+        [self findLinksInAttributedString:tempAttributedString
+                           withAttributes:linkAttributes];
+    }
 
-    [self findHashtagsInAttributedString:tempAttributedString
-                          withAttributes:hashtagAttributes ?: self.defaultHashtagAttributes];
+    if (hashtagAttributes) {
+        [self findHashtagsInAttributedString:tempAttributedString
+                              withAttributes:hashtagAttributes ?: self.defaultHashtagAttributes];
+    }
 
-    [self findMentionsInAttributedString:tempAttributedString
-                          withAttributes:mentionAttributes ?: self.defaultMentionAttributes];
+    if (mentionAttributes) {
+        [self findMentionsInAttributedString:tempAttributedString
+                              withAttributes:mentionAttributes ?: self.defaultMentionAttributes];
+    }
 
     self.attributedText = tempAttributedString;
 
@@ -386,7 +388,8 @@ NSString *const kNHLabelMentionPattern = @"(\\A|\\W)(@\\w+)";
                                              BOOL *stop) {
                                     NSRange linkRange = result.range;
 
-                                    [string addAttributes:attributes range:linkRange];
+                                    [string addAttributes:attributes ?: self.defaultLinkAttributes
+                                                    range:linkRange];
                                 }];
 }
 
@@ -413,7 +416,8 @@ NSString *const kNHLabelMentionPattern = @"(\\A|\\W)(@\\w+)";
                                               BOOL *stop) {
                                      NSRange hashtagRange = [result rangeAtIndex:0];
 
-                                     [string addAttributes:attributes range:hashtagRange];
+                                     [string addAttributes:attributes ?: self.defaultHashtagAttributes
+                                                     range:hashtagRange];
                                  }];
 }
 
@@ -425,7 +429,10 @@ NSString *const kNHLabelMentionPattern = @"(\\A|\\W)(@\\w+)";
 
     NSRange textRange = NSMakeRange(0, [string length]);
 
-    NSRegularExpression *mentionRegExp = [NSRegularExpression regularExpressionWithPattern:kNHLabelMentionPattern options:0 error:nil];
+    NSRegularExpression *mentionRegExp = [NSRegularExpression
+                                          regularExpressionWithPattern:kNHLabelMentionPattern
+                                          options:0
+                                          error:nil];
 
     [mentionRegExp enumerateMatchesInString:[string string]
                                     options:0
@@ -435,7 +442,8 @@ NSString *const kNHLabelMentionPattern = @"(\\A|\\W)(@\\w+)";
                                               BOOL *stop) {
                                      NSRange mentionRange = [result rangeAtIndex:0];
 
-                                     [string addAttributes:attributes range:mentionRange];
+                                     [string addAttributes:attributes ?: self.defaultMentionAttributes
+                                                     range:mentionRange];
                                  }];
 }
 

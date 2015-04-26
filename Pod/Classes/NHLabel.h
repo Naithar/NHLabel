@@ -51,7 +51,6 @@ extern NSString *const kNHLabelUrlToSelector;
 
 - (void)removeCustomAction:(NSString*)name;
 
-- (void)formatTextAsPhone;
 - (void)findLinksHashtagsAndMentions;
 - (void)findLinks:(NSDictionary*)linkAttributes
          hashtags:(NSDictionary*)hashtagAttributes
