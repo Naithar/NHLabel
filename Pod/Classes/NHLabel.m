@@ -72,9 +72,20 @@ NSString *const kNHLabelMentionAttributesSetting = @"NHLabelMentionAttributes";
     dispatch_once(&token, ^{
         settings = [@{
                       kNHLabelResponderAlphaSetting : @0.75,
-                      kNHLabelLinkAttributesSetting : @{},
-                      kNHLabelHashtagAttributesSetting : @{},
-                      kNHLabelMentionAttributesSetting : @{}
+                      kNHLabelLinkAttributesSetting : @{
+                              NSForegroundColorAttributeName : [UIColor colorWithRed:0 green:0.5 blue:1 alpha:1],
+                              NSUnderlineStyleAttributeName : @(NSUnderlineStyleSingle),
+                              NSUnderlineColorAttributeName : [UIColor colorWithRed:0 green:0.5 blue:1 alpha:1],
+                              },
+                      kNHLabelHashtagAttributesSetting : @{
+                              NSUnderlineStyleAttributeName : @(NSUnderlineStyleNone),
+                              NSForegroundColorAttributeName : [UIColor colorWithRed:0 green:0.5 blue:1 alpha:1],
+                              },
+                      kNHLabelMentionAttributesSetting : @{
+                              NSUnderlineStyleAttributeName : @(NSUnderlineStyleNone),
+                              NSForegroundColorAttributeName : [UIColor colorWithRed:1 green:0.25 blue:0 alpha:1],
+                              NSFontAttributeName : [UIFont boldSystemFontOfSize:17],
+                              }
                      } mutableCopy];
     });
 
@@ -348,29 +359,23 @@ NSString *const kNHLabelMentionAttributesSetting = @"NHLabelMentionAttributes";
          hashtags:(NSDictionary*)hashtagAttributes
          mentions:(NSDictionary*)mentionAttributes {
 
-    NSMutableAttributedString *tempAttributedString;
 
-    if (!self.attributedText) {
         NSMutableParagraphStyle *paragraphStyle = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
 
         paragraphStyle.lineBreakMode = self.lineBreakMode;
         paragraphStyle.alignment = self.textAlignment;
 
-        tempAttributedString = [[NSMutableAttributedString alloc]
+        NSMutableAttributedString *tempAttributedString = [[NSMutableAttributedString alloc]
                                 initWithString:self.text ?: @""
                                 attributes:@{
-                                             NSFontAttributeName : self.font,
-                                             NSForegroundColorAttributeName : self.textColor,
+                                             NSFontAttributeName : self.font ?: [UIFont systemFontOfSize:17],
+                                             NSForegroundColorAttributeName : self.textColor ?: [UIColor blackColor],
                                              NSParagraphStyleAttributeName : paragraphStyle
                                              }];
-    }
-    else {
-        tempAttributedString = [self.attributedText mutableCopy];
-    }
 
     if (linkAttributes) {
         [self findLinksInAttributedString:tempAttributedString
-                           withAttributes:linkAttributes];
+                           withAttributes:linkAttributes ?: self.linkAttributes];
     }
 
     if (hashtagAttributes) {
@@ -405,9 +410,9 @@ NSString *const kNHLabelMentionAttributesSetting = @"NHLabelMentionAttributes";
                                 usingBlock:^(NSTextCheckingResult *result,
                                              NSMatchingFlags flags,
                                              BOOL *stop) {
-                                    NSRange linkRange = result.range;
+                                    NSRange linkRange = [result rangeAtIndex:0];
 
-                                    [string addAttributes:attributes ?: self.linkAttributes
+                                    [string addAttributes:attributes ?: @{}
                                                     range:linkRange];
                                 }];
 }
@@ -435,7 +440,7 @@ NSString *const kNHLabelMentionAttributesSetting = @"NHLabelMentionAttributes";
                                               BOOL *stop) {
                                      NSRange hashtagRange = [result rangeAtIndex:0];
 
-                                     [string addAttributes:attributes ?: self.hashtagAttributes
+                                     [string addAttributes:attributes ?: @{}
                                                      range:hashtagRange];
                                  }];
 }
@@ -461,7 +466,7 @@ NSString *const kNHLabelMentionAttributesSetting = @"NHLabelMentionAttributes";
                                               BOOL *stop) {
                                      NSRange mentionRange = [result rangeAtIndex:0];
 
-                                     [string addAttributes:attributes ?: self.mentionAttributes
+                                     [string addAttributes:attributes ?: @{}
                                                      range:mentionRange];
                                  }];
 }

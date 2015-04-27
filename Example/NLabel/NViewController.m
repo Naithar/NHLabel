@@ -20,30 +20,10 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-	// Do any additional setup after loading the view, typically from a nib.
-
-//    [[NHLabel appearance] setLinkAttributes:
-//
-//    [NHLabel appearance].hashtagAttributes = @{
-//
-//    [NHLabel appearance].mentionAttributes = @{
-//
-//    [NHLabel appearanceWhenContainedIn:[NHLabel class], nil].responderAlpha = 1;
-
-     [NHLabel defaultSettings][kNHLabelLinkAttributesSetting] = @{
-                                                                  NSForegroundColorAttributeName : [UIColor blueColor],
-                                                                  };
-
-     [NHLabel defaultSettings][kNHLabelHashtagAttributesSetting] = @{
-                                                                     NSForegroundColorAttributeName : [UIColor redColor],
-                                                                     };
-    [NHLabel defaultSettings][kNHLabelMentionAttributesSetting] = @{
-                                                                    NSForegroundColorAttributeName : [UIColor greenColor],
-                                                                    };
-    [NHLabel defaultSettings][kNHLabelResponderAlphaSetting] = @1;
 
     self.label = [[NHLabel alloc] initWithFrame:CGRectMake(0, 0, 300, 100)];
-    self.label.text = @"text @dsa #dsa http://google.com";
+    self.label.text = @"text @dsa #dsa http://google.com #d";
+
     [self.label findLinksHashtagsAndMentions];
     self.label.backgroundColor = [UIColor lightGrayColor];
     self.label.canPerform = YES;
@@ -51,26 +31,13 @@
     self.label.useSingleTouch = YES;
     [self.label addCustomAction:@"name" withTitle:@"title" andSelector:@selector(u:)];
     self.label.delegate = self;
-//    label.canResignFirstResponder
 
-
-//    self.longPressRecognizer = [[UITapGestureRecognizer alloc]
-//                                initWithTarget:self
-//                                action:@selector(longPressRecognizerAction:)];
-//        self.longPressRecognizer.numberOfTouchesRequired = 1;
-//        self.longPressRecognizer.numberOfTapsRequired = 1;
-//    [self.view addGestureRecognizer:self.longPressRecognizer];
-
+    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 110, 300, 100)];
+    label.attributedText = self.label.attributedText;
 
     [self.view addSubview:self.label];
+    [self.view addSubview:label];
 }
-
-//- (void)longPressRecognizerAction:(UITapGestureRecognizer*)recognizer {
-//    //    if (recognizer.state == UIGestureRecognizerStateBegan) {
-//    [self.label becomeFirstResponder];
-//    //    }
-//}
-
 
 - (void)didReceiveMemoryWarning
 {
