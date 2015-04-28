@@ -24,6 +24,7 @@
     self.label = [[NHLabel alloc] initWithFrame:CGRectMake(0, 0, 300, 100)];
     self.label.text = @"text @dsa #dsa http://google.com #d";
 
+        self.label.lineHeight = 100;
     [self.label findLinksHashtagsAndMentions];
     self.label.backgroundColor = [UIColor lightGrayColor];
     self.label.canPerform = YES;
@@ -31,6 +32,8 @@
     self.label.useSingleTouch = YES;
     [self.label addCustomAction:@"name" withTitle:@"title" andSelector:@selector(u:)];
     self.label.delegate = self;
+    [self.label sizeToFit];
+
 
     UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 110, 300, 100)];
     label.attributedText = self.label.attributedText;

@@ -99,6 +99,7 @@ NSString *const kNHLabelMentionAttributesSetting = @"NHLabelMentionAttributes";
     _additionalSelectors = @[];
     _customSelectors = [@{} mutableCopy];
     _textInsets = UIEdgeInsetsZero;
+    _lineHeight = -1;
     
     _linkAttributes = ifNSNull([NHLabel defaultSettings][kNHLabelLinkAttributesSetting], nil);
     _hashtagAttributes = ifNSNull([NHLabel defaultSettings][kNHLabelHashtagAttributesSetting], nil);
@@ -364,6 +365,10 @@ NSString *const kNHLabelMentionAttributesSetting = @"NHLabelMentionAttributes";
 
         paragraphStyle.lineBreakMode = self.lineBreakMode;
         paragraphStyle.alignment = self.textAlignment;
+    if (self.lineHeight > 0) {
+        paragraphStyle.minimumLineHeight = self.lineHeight;
+        paragraphStyle.maximumLineHeight = self.lineHeight;
+    }
 
         NSMutableAttributedString *tempAttributedString = [[NSMutableAttributedString alloc]
                                 initWithString:self.text ?: @""

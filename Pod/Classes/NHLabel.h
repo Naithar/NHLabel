@@ -49,6 +49,8 @@ extern NSString *const kNHLabelMentionAttributesSetting;
 
 @property (nonatomic, assign) CGFloat responderAlpha;
 
+@property (nonatomic, assign) CGFloat lineHeight;
+
 + (NSMutableDictionary*)defaultSettings;
 
 - (void)addCustomAction:(NSString*)name
