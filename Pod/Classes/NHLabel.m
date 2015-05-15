@@ -350,7 +350,14 @@ NSString *const kNHLabelMentionAttributesSetting = @"NHLabelMentionAttributes";
              limitedToNumberOfLines:numberOfLines];
 }
 
+- (CGSize)sizeThatFits:(CGSize)size {
+    CGSize resultValue = [super sizeThatFits:size];
 
+    resultValue.height += (self.textInsets.top + self.textInsets.bottom);
+    resultValue.width += (self.textInsets.left + self.textInsets.right);
+
+    return resultValue;
+}
 
 - (CGSize)intrinsicContentSize {
     CGSize resultValue = [super intrinsicContentSize];
