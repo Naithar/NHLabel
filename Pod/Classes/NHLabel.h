@@ -47,6 +47,8 @@ extern NSString *const kNHLabelMentionAttributesSetting;
 @property (nonatomic, copy) NSDictionary *hashtagAttributes;
 @property (nonatomic, copy) NSDictionary *mentionAttributes;
 
+@property (nonatomic, assign) BOOL roundCorners;
+
 @property (nonatomic, assign) CGFloat responderAlpha;
 
 @property (nonatomic, assign) CGFloat lineHeight;

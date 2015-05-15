@@ -35,6 +35,10 @@
     [self.label sizeToFit];
 
 
+    self.label.text = @"text #d";
+
+    [self.label findLinksHashtagsAndMentions];
+
     UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 110, 300, 100)];
     label.attributedText = self.label.attributedText;
 

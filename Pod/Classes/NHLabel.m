@@ -350,6 +350,33 @@ NSString *const kNHLabelMentionAttributesSetting = @"NHLabelMentionAttributes";
              limitedToNumberOfLines:numberOfLines];
 }
 
+
+
+- (CGSize)intrinsicContentSize {
+    CGSize resultValue = [super intrinsicContentSize];
+
+    resultValue.height += (self.textInsets.top + self.textInsets.bottom);
+    resultValue.width += (self.textInsets.left + self.textInsets.right);
+
+    return resultValue;
+}
+
+- (void)setBounds:(CGRect)bounds {
+    [super setBounds:bounds];
+
+    if (self.roundCorners) {
+        self.layer.cornerRadius = bounds.size.height / 2;
+    }
+}
+
+- (void)setFrame:(CGRect)frame {
+    [super setFrame:frame];
+
+    if (self.roundCorners) {
+        self.layer.cornerRadius = frame.size.height / 2;
+    }
+}
+
 - (void)findLinksHashtagsAndMentions {
     [self findLinks:self.linkAttributes
            hashtags:self.hashtagAttributes
