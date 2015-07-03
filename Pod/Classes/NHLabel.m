@@ -11,6 +11,11 @@
 #define ifNSNull(x, y) \
 ([x isKindOfClass:[NSNull class]]) ? y : (x ?: y)
 
+#define localization(name, table) \
+NSLocalizedStringFromTableInBundle(name, \
+table, \
+[NSBundle bundleForClass:[NHLabel class]], nil)
+
 NSString *const kNHLabelCallToSelector = @"callTo:";
 NSString *const kNHLabelSmsToSelector = @"smsTo:";
 NSString *const kNHLabelEmailToSelector = @"emailTo:";
@@ -261,16 +266,16 @@ NSString *const kNHLabelMentionAttributesSetting = @"NHLabelMentionAttributes";
 
         NSMutableArray *customMenuItems = [@[
                                      [[UIMenuItem alloc]
-                                      initWithTitle:NSLocalizedStringFromTable(@"NLabel.call", @"NLabel", nil)
+                                      initWithTitle:localization(@"NLabel.call", @"NLabel")
                                       action:@selector(callTo:)],
                                      [[UIMenuItem alloc]
-                                      initWithTitle:NSLocalizedStringFromTable(@"NLabel.sms", @"NLabel", nil)
+                                      initWithTitle:localization(@"NLabel.sms", @"NLabel")
                                       action:@selector(smsTo:)],
                                      [[UIMenuItem alloc]
-                                      initWithTitle:NSLocalizedStringFromTable(@"NLabel.email", @"NLabel", nil)
+                                      initWithTitle:localization(@"NLabel.email", @"NLabel")
                                       action:@selector(emailTo:)],
                                      [[UIMenuItem alloc]
-                                      initWithTitle:NSLocalizedStringFromTable(@"NLabel.url", @"NLabel", nil)
+                                      initWithTitle:localization(@"NLabel.url", @"NLabel")
                                       action:@selector(urlTo:)],
                                      ] mutableCopy];
 
@@ -284,7 +289,7 @@ NSString *const kNHLabelMentionAttributesSetting = @"NHLabelMentionAttributes";
             NSString *menuItemTitle = ([localizationTable isEqual:[NSNull null]]
                                        || localizationTable == nil
                                        ? NSLocalizedString(title, nil)
-                                       : NSLocalizedStringFromTable(title, localizationTable, nil));
+                                       : localization(title, localizationTable));
 
             [customMenuItems addObject:[[UIMenuItem alloc]
                                         initWithTitle:menuItemTitle action:selector]];

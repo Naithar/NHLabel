@@ -9,7 +9,7 @@
 
 Pod::Spec.new do |s|
   s.name             = "NLabel"
-  s.version          = "0.1.0"
+  s.version          = "0.5.0"
   s.summary          = "Simple label with actions"
   s.description      = <<-DESC
                        Custom UILabel with some build in menu actions
@@ -27,11 +27,6 @@ Pod::Spec.new do |s|
 
   s.source_files = 'Pod/Classes/**/*'
   s.resources = ['Pod/Localization/**']
-#s.resource_bundles = {
-#   'NLabel' => ['Pod/Assets/*.png']
-# }
 
   s.public_header_files = 'Pod/Classes/NLabel.h'
-  # s.frameworks = 'UIKit', 'MapKit'
-  # s.dependency 'AFNetworking', '~> 2.3'
 end
