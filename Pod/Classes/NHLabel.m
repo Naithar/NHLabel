@@ -242,9 +242,19 @@ NSString *const kNHLabelMentionAttributesSetting = @"NHLabelMentionAttributes";
 
 - (void)urlTo:(NSObject*)sender {
     [self resignFirstResponder];
-    [[UIApplication sharedApplication]
-     openURL:[NSURL
-              URLWithString:[self createTextForAction]]];
+    
+    NSURL *url = [NSURL
+                  URLWithString:[self createTextForAction]];
+    
+    __weak __typeof(self) weakSelf = self;
+    if ([weakSelf.delegate respondsToSelector:@selector(label:openURL:)]) {
+        [weakSelf.delegate label:weakSelf openURL:url];
+    }
+    else {
+        [[UIApplication sharedApplication]
+         openURL:url];
+    }
+
     [self resignFirstResponder];
 }
 
