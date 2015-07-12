@@ -27,6 +27,7 @@ extern NSString *const kNHLabelMentionAttributesSetting;
 @optional
 - (void)labelDidBecomeFirstResponder:(NHLabel*)label;
 - (void)labelDidResignFirstResponder:(NHLabel*)label;
+- (void)label:(NHLabel*)label openURL:(NSURL*)url;
 
 @end
 
