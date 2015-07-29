@@ -35,6 +35,9 @@ NSString *const kNHLabelLinkAttributesSetting = @"NHLabelLinkAttributes";
 NSString *const kNHLabelHashtagAttributesSetting = @"NHLabelHashtagAttributes";
 NSString *const kNHLabelMentionAttributesSetting = @"NHLabelMentionAttributes";
 
+NSString *const kNHLabelMentionRegexpSetting = @"NHLabelMentionRegexp";
+NSString *const kNHLabelHashtagRegexpSetting = @"NHLabelHashtagRegexp";
+
 @interface NHLabel ()
 
 @property (nonatomic, strong) UITapGestureRecognizer *tapRecognizer;
@@ -111,6 +114,8 @@ NSString *const kNHLabelMentionAttributesSetting = @"NHLabelMentionAttributes";
     _mentionAttributes = ifNSNull([NHLabel defaultSettings][kNHLabelMentionAttributesSetting], nil);
     _responderAlpha = [ifNSNull([NHLabel defaultSettings][kNHLabelResponderAlphaSetting], @0) floatValue];
 
+    _mentionPattern = ifNSNull([NHLabel defaultSettings][kNHLabelMentionRegexpSetting], nil);
+    _hashtagPattern = ifNSNull([NHLabel defaultSettings][kNHLabelHashtagRegexpSetting], nil);
 
     self.tapRecognizer = [[UITapGestureRecognizer alloc]
                                 initWithTarget:self
@@ -470,7 +475,7 @@ NSString *const kNHLabelMentionAttributesSetting = @"NHLabelMentionAttributes";
     NSRange textRange = NSMakeRange(0, [string length]);
 
     NSRegularExpression *hashtagRegExp = [NSRegularExpression
-                                          regularExpressionWithPattern:kNHLabelHashtagPattern
+                                          regularExpressionWithPattern:self.hashtagPattern ?: kNHLabelHashtagPattern
                                           options:0
                                           error:nil];
 
@@ -498,7 +503,7 @@ NSString *const kNHLabelMentionAttributesSetting = @"NHLabelMentionAttributes";
     NSRange textRange = NSMakeRange(0, [string length]);
 
     NSRegularExpression *mentionRegExp = [NSRegularExpression
-                                          regularExpressionWithPattern:kNHLabelMentionPattern
+                                          regularExpressionWithPattern:self.mentionPattern ?: kNHLabelMentionPattern
                                           options:0
                                           error:nil];
 

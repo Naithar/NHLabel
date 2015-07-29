@@ -20,6 +20,9 @@ extern NSString *const kNHLabelLinkAttributesSetting;
 extern NSString *const kNHLabelHashtagAttributesSetting;
 extern NSString *const kNHLabelMentionAttributesSetting;
 
+extern NSString *const kNHLabelMentionRegexpSetting;
+extern NSString *const kNHLabelHashtagRegexpSetting;
+
 @class NHLabel;
 
 @protocol NHLabelDelegate <NSObject>
@@ -52,6 +55,9 @@ extern NSString *const kNHLabelMentionAttributesSetting;
 @property (nonatomic, assign) CGFloat responderAlpha;
 
 @property (nonatomic, assign) CGFloat lineHeight;
+
+@property (nonatomic, copy) NSString *mentionPattern;
+@property (nonatomic, copy) NSString *hashtagPattern;
 
 + (NSMutableDictionary*)defaultSettings;
 
