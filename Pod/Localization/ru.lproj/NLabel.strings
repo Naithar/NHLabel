@@ -8,5 +8,5 @@
 
 "NLabel.call" = "Позвонить";
 "NLabel.sms" = "Отправить сообщение";
-"NLabel.email" = "Отпрвить email";
+"NLabel.email" = "Отправить email";
 "NLabel.url" = "Перейти по ссылке";

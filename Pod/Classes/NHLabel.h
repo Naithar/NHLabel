@@ -30,6 +30,7 @@ extern NSString *const kNHLabelHashtagRegexpSetting;
 @optional
 - (void)labelDidBecomeFirstResponder:(NHLabel*)label;
 - (void)labelDidResignFirstResponder:(NHLabel*)label;
+- (void)label:(NHLabel*)label openURL:(NSURL*)url;
 
 @end
 

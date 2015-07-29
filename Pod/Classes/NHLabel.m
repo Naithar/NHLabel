@@ -247,9 +247,19 @@ NSString *const kNHLabelHashtagRegexpSetting = @"NHLabelHashtagRegexp";
 
 - (void)urlTo:(NSObject*)sender {
     [self resignFirstResponder];
-    [[UIApplication sharedApplication]
-     openURL:[NSURL
-              URLWithString:[self createTextForAction]]];
+    
+    NSURL *url = [NSURL
+                  URLWithString:[self createTextForAction]];
+    
+    __weak __typeof(self) weakSelf = self;
+    if ([weakSelf.delegate respondsToSelector:@selector(label:openURL:)]) {
+        [weakSelf.delegate label:weakSelf openURL:url];
+    }
+    else {
+        [[UIApplication sharedApplication]
+         openURL:url];
+    }
+
     [self resignFirstResponder];
 }
 
@@ -351,31 +361,40 @@ NSString *const kNHLabelHashtagRegexpSetting = @"NHLabelHashtagRegexp";
 }
 
 - (void)drawTextInRect:(CGRect)rect {
-    [super drawTextInRect:UIEdgeInsetsInsetRect(rect, self.textInsets)];
+    [super drawTextInRect:[self nhLabelRectFromRect:rect]];
 }
 
 - (CGRect)textRectForBounds:(CGRect)bounds
      limitedToNumberOfLines:(NSInteger)numberOfLines {
-    return [super textRectForBounds:UIEdgeInsetsInsetRect(bounds, self.textInsets)
+    return [super textRectForBounds:[self nhLabelRectFromRect:bounds]
              limitedToNumberOfLines:numberOfLines];
 }
 
 - (CGSize)sizeThatFits:(CGSize)size {
-    CGSize resultValue = [super sizeThatFits:size];
-
-    resultValue.height += (self.textInsets.top + self.textInsets.bottom);
-    resultValue.width += (self.textInsets.left + self.textInsets.right);
-
-    return resultValue;
+    return [self nhLabelSizeFromSize:[super sizeThatFits:size]];
 }
 
 - (CGSize)intrinsicContentSize {
-    CGSize resultValue = [super intrinsicContentSize];
+    return [self nhLabelSizeFromSize:[super intrinsicContentSize]];
+}
 
+- (CGSize)nhLabelSizeFromSize:(CGSize)size {
+    if (CGSizeEqualToSize(size, CGSizeZero)) {
+        return CGSizeZero;
+    }
+    
+    CGSize resultValue = size;
+    
     resultValue.height += (self.textInsets.top + self.textInsets.bottom);
     resultValue.width += (self.textInsets.left + self.textInsets.right);
-
+    
     return resultValue;
+}
+
+- (CGRect)nhLabelRectFromRect:(CGRect)rect {
+    return (CGSizeEqualToSize(rect.size, CGSizeZero))
+    ? rect
+    : UIEdgeInsetsInsetRect(rect, self.textInsets);
 }
 
 - (void)setBounds:(CGRect)bounds {
