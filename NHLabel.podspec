@@ -8,18 +8,18 @@
 #
 
 Pod::Spec.new do |s|
-  s.name             = "NLabel"
+  s.name             = "NHLabel"
   s.version          = "0.5.0"
   s.summary          = "Simple label with actions"
   s.description      = <<-DESC
                        Custom UILabel with some build in menu actions
                         like call, send sms, send email and go to url.
                        DESC
-  s.homepage         = "https://github.com/naithar/NLabel"
+  s.homepage         = "https://github.com/naithar/NHLabel"
   # s.screenshots     = "www.example.com/screenshots_1", "www.example.com/screenshots_2"
   s.license          = 'MIT'
   s.author           = { "Naithar" => "devias.naith@gmail.com" }
-  s.source           = { :git => "https://github.com/naithar/NLabel.git", :tag => s.version.to_s }
+  s.source           = { :git => "https://github.com/naithar/NHLabel.git", :tag => s.version.to_s }
   # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
 
   s.platform     = :ios, '7.0'
@@ -28,5 +28,5 @@ Pod::Spec.new do |s|
   s.source_files = 'Pod/Classes/**/*'
   s.resources = ['Pod/Localization/**']
 
-  s.public_header_files = 'Pod/Classes/NLabel.h'
+  s.public_header_files = 'Pod/Classes/NHLabel.h'
 end
