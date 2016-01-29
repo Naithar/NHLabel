@@ -1,9 +1,4 @@
-# NLabel
-
-[![CI Status](http://img.shields.io/travis/Naithar/NLabel.svg?style=flat)](https://travis-ci.org/Naithar/NLabel)
-[![Version](https://img.shields.io/cocoapods/v/NLabel.svg?style=flat)](http://cocoapods.org/pods/NLabel)
-[![License](https://img.shields.io/cocoapods/l/NLabel.svg?style=flat)](http://cocoapods.org/pods/NLabel)
-[![Platform](https://img.shields.io/cocoapods/p/NLabel.svg?style=flat)](http://cocoapods.org/pods/NLabel)
+# NHLabel
 
 ## Usage
 
@@ -17,7 +12,7 @@ NLabel is available through [CocoaPods](http://cocoapods.org). To install
 it, simply add the following line to your Podfile:
 
 ```ruby
-pod "NLabel"
+pod "NHLabel", :git => "https://github.com/Naithar/NHLabel.git"
 ```
 
 ## Author
